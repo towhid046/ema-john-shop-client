@@ -102,7 +102,7 @@ const Shop = () => {
   return (
     <div className="shop-container">
       <div className="products-container">
-        {products.map((product) => (
+        {products?.map((product) => (
           <Product
             key={product._id}
             product={product}
@@ -119,12 +119,12 @@ const Shop = () => {
       </div>
       <div className="pagination-container">
         <ul>
-          <button onClick={handlePrevPage}>Prev</button>
+          <button className={`${currentPage > 0 ? '' : 'hide'}`} onClick={handlePrevPage}>Prev</button>
           {pages}
           <button onClick={handleNextPage}>Next</button>
         </ul>
         <div>
-          <select onChange={handleChangePage} name="" id="">
+          <select className="button" onChange={handleChangePage} name="" id="">
             <option value={5}>5</option>
             <option value={10}>10</option>
             <option value={15}>15</option>

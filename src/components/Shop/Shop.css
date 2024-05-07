@@ -40,3 +40,6 @@
 .pagination-container > ul .selected {
     background-color: #FF9900;
 }
+.hide{
+    display: none;
+}
