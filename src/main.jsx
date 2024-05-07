@@ -21,7 +21,8 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Shop></Shop>
+        element: <Shop></Shop>,
+        loader: () => fetch(`${import.meta.env.VITE_URL}/products-count`)
       },
       {
         path: 'orders',

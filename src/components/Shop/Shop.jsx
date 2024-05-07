@@ -7,11 +7,46 @@ import {
 import Cart from "../Cart/Cart";
 import Product from "../Product/Product";
 import "./Shop.css";
-import { Link } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 
 const Shop = () => {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
+
+  const { count } = useLoaderData();
+  const [itemPerPage, setItemPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const totalPages = Math.ceil(count / itemPerPage);
+  const numberOfPages = [...Array(totalPages).keys()];
+
+  const pages = numberOfPages.map((number) => (
+    <button
+      className={number === currentPage ? "selected" : ""}
+      onClick={() => setCurrentPage(number)}
+      key={number}
+    >
+      {number}
+    </button>
+  ));
+
+  const handleChangePage = (e) => {
+    const value = Number(e.target.value);
+    setItemPerPage(value);
+    setCurrentPage(0);
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if(currentPage < totalPages - 1){
+      setCurrentPage(currentPage + 1)
+    }
+  }
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_URL}/products`)
@@ -81,6 +116,20 @@ const Shop = () => {
             <button className="btn-proceed">Review Order</button>
           </Link>
         </Cart>
+      </div>
+      <div className="pagination-container">
+        <ul>
+          <button onClick={handlePrevPage}>Prev</button>
+          {pages}
+          <button onClick={handleNextPage}>Next</button>
+        </ul>
+        <div>
+          <select onChange={handleChangePage} name="" id="">
+            <option value={5}>5</option>
+            <option value={10}>10</option>
+            <option value={15}>15</option>
+          </select>
+        </div>
       </div>
     </div>
   );
