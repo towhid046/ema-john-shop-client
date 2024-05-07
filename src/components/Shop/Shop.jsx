@@ -43,16 +43,16 @@ const Shop = () => {
   };
 
   const handleNextPage = () => {
-    if(currentPage < totalPages - 1){
-      setCurrentPage(currentPage + 1)
+    if (currentPage < totalPages - 1) {
+      setCurrentPage(currentPage + 1);
     }
-  }
+  };
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_URL}/products`)
+    fetch(`${import.meta.env.VITE_URL}/products?page=${currentPage}&size=${itemPerPage}`)
       .then((res) => res.json())
       .then((data) => setProducts(data));
-  }, []);
+  }, [currentPage, itemPerPage]);
 
   useEffect(() => {
     const storedCart = getShoppingCart();
