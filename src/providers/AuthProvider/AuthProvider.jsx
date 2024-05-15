@@ -28,7 +28,6 @@ const AuthProvider = ({ children }) => {
     const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       const loggedUser = currentUser?.email;
-      console.log(loggedUser);
       //  AXIOS REQUEST FOR GENERATE TOKEN IF CURRENT USER EXIST
       if (currentUser) {
         const loadToken = async () => {

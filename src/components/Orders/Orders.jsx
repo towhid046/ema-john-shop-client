@@ -1,48 +1,67 @@
-import React, { useState } from 'react';
-import Cart from '../Cart/Cart';
-import { Link, useLoaderData } from 'react-router-dom';
-import ReviewItem from '../ReviewItem/ReviewItem';
-import './Orders.css';
-import { deleteShoppingCart, removeFromDb } from '../../utilities/fakedb';
+import React, { useEffect, useState } from "react";
+import Cart from "../Cart/Cart";
+import { Link } from "react-router-dom";
+import ReviewItem from "../ReviewItem/ReviewItem";
+import "./Orders.css";
+import { deleteShoppingCart, removeFromDb } from "../../utilities/fakedb";
+import cartProductsLoader from "../../loaders/cartProductsLoader";
 
 const Orders = () => {
-    const savedCart = useLoaderData();
-    const [cart, setCart] = useState(savedCart);
+  const [cart, setCart] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    const handleRemoveFromCart = (id) => {
-        const remaining = cart.filter(product => product._id !== id);
-        setCart(remaining);
-        removeFromDb(id);
-    }
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const cartItems = await cartProductsLoader();
+        setCart(cartItems);
+        setLoading(false);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    loadData();
+  }, []);
 
-    const handleClearCart = () => {
-        setCart([]);
-        deleteShoppingCart();
-    }
+  const handleRemoveFromCart = (id) => {
+    const remaining = cart.filter((product) => product._id !== id);
+    setCart(remaining);
+    removeFromDb(id);
+  };
 
+  const handleClearCart = () => {
+    setCart([]);
+    deleteShoppingCart();
+  };
+
+  if (loading) {
     return (
-        <div className='shop-container'>
-            <div className='review-container'>
-                {
-                    cart.map(product => <ReviewItem
-                        key={product._id}
-                        product={product}
-                        handleRemoveFromCart={handleRemoveFromCart}
-                    ></ReviewItem>)
-                }
-            </div>
-            <div className='cart-container'>
-                <Cart
-                    cart={cart}
-                    handleClearCart={handleClearCart}
-                >
-                    <Link className='proceed-link' to="/checkout">
-                        <button className='btn-proceed'>Proceed Checkout</button>
-                    </Link>
-                </Cart>
-            </div>
-        </div>
+      <div className="flex items-center justify-center min-h-[80vh]">
+        <span className="loading loading-spinner loading-lg"></span>
+      </div>
     );
+  }
+
+  return (
+    <div className="shop-container">
+      <div className="review-container">
+        {cart?.map((product) => (
+          <ReviewItem
+            key={product._id}
+            product={product}
+            handleRemoveFromCart={handleRemoveFromCart}
+          ></ReviewItem>
+        ))}
+      </div>
+      <div className="cart-container">
+        <Cart cart={cart} handleClearCart={handleClearCart}>
+          <Link className="proceed-link" to="/checkout">
+            <button className="btn-proceed">Proceed Checkout</button>
+          </Link>
+        </Cart>
+      </div>
+    </div>
+  );
 };
 
 export default Orders;

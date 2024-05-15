@@ -4,7 +4,6 @@ const cartProductsLoader = async () => {
   const storedCart = getShoppingCart();
   const savedCart = [];
   const productIds = Object.keys(storedCart);
-  console.log(productIds)
 
   const loadedProducts = await fetch("http://localhost:5000/productsIds", {
     method: "POST",

@@ -49,7 +49,11 @@ const Shop = () => {
   };
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_URL}/products?page=${currentPage}&size=${itemPerPage}`)
+    fetch(
+      `${
+        import.meta.env.VITE_URL
+      }/products?page=${currentPage}&size=${itemPerPage}`
+    )
       .then((res) => res.json())
       .then((data) => setProducts(data));
   }, [currentPage, itemPerPage]);
@@ -119,9 +123,11 @@ const Shop = () => {
       </div>
       <div className="pagination-container">
         <ul>
-          <button className={`${currentPage > 0 ? '' : 'hide'}`} onClick={handlePrevPage}>Prev</button>
+          <button disabled={currentPage <= 0} onClick={handlePrevPage}>
+            Prev
+          </button>
           {pages}
-          <button onClick={handleNextPage}>Next</button>
+          <button disabled={currentPage === numberOfPages.length -1} onClick={handleNextPage}>Next</button>
         </ul>
         <div>
           <select className="button" onChange={handleChangePage} name="" id="">
